@@ -1,0 +1,22 @@
+{
+  "@@locale": "en",
+  "settingsTitle": "Settings",
+  "themeOption": "Theme",
+  "languageOption": "Language",
+  "selectLanguage": "Select Language",
+  "uzbekLanguage": "Uzbek",
+  "russianLanguage": "Russian",
+  "orderConfirmation": "Order Confirmation",
+  "cartTitle": "Your Cart",
+  "totalPrice": "Total Price",
+  "phoneNumber": "Phone Number",
+  "enterPhoneNumber": "Enter phone number",
+  "invalidPhoneNumber": "Enter in format: +998 XX XXX XX XX",
+  "address": "Address",
+  "enterAddress": "Enter delivery address",
+  "invalidAddress": "Enter address",
+  "confirmOrder": "Confirm Order",
+  "orderSentSuccess": "Order sent successfully!",
+  "errorOccurred": "An error occurred. Please try again.",
+  "checkInternet": "Check internet connection."
+} 
