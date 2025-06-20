@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 
+import 'app.dart';
 import 'features/splash/splash_screen.dart';
 import 'providers/theme_provider.dart';
 import 'providers/cart_provider.dart';
@@ -17,7 +18,6 @@ void main() async {
       providers: [
         ChangeNotifierProvider(create: (context) => ThemeProvider()),
         ChangeNotifierProvider(create: (context) => CartProvider()),
-        // ChangeNotifierProvider(create: (context) => LocalizationProvider()),
       ],
       child: EasyLocalization(
         supportedLocales: const [Locale('uz', 'UZ'), Locale('ru', 'RU')],
@@ -31,42 +31,3 @@ void main() async {
   );
 }
 
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Consumer<ThemeProvider>(
-      builder: (context, themeProvider, child) {
-        return MaterialApp(
-          title: 'Tez Taom',
-          debugShowCheckedModeBanner: false,
-          theme: ThemeData(
-            colorScheme: ColorScheme.fromSeed(
-              seedColor: Colors.orange,
-              primary: Colors.orange,
-              secondary: Colors.orangeAccent,
-            ),
-            textTheme: GoogleFonts.poppinsTextTheme(),
-            useMaterial3: true,
-          ),
-          darkTheme: ThemeData(
-            colorScheme: ColorScheme.fromSeed(
-              seedColor: Colors.orange,
-              primary: Colors.orange,
-              secondary: Colors.orangeAccent,
-              brightness: Brightness.dark,
-            ),
-            textTheme: GoogleFonts.poppinsTextTheme().apply(bodyColor: Colors.white, displayColor: Colors.white),
-            useMaterial3: true,
-          ),
-          themeMode: themeProvider.themeMode,
-          locale: context.locale,
-          supportedLocales: context.supportedLocales,
-          localizationsDelegates: context.localizationDelegates,
-          home: const SplashScreen(),
-        );
-      },
-    );
-  }
-}

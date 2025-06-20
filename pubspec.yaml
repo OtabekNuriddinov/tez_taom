@@ -14,7 +14,7 @@ dependencies:
     sdk: flutter
 
   cupertino_icons: ^1.0.2
-  google_fonts: ^6.1.0
+  google_fonts: ^6.2.1
   provider: ^6.0.5
   http: ^1.2.0
   shared_preferences: ^2.2.2
@@ -24,6 +24,7 @@ dependencies:
   package_info_plus: ^5.0.1
   url_launcher: ^6.2.4
   flutter_launcher_icons: ^0.14.4
+  share_plus: ^7.2.1
 
 dev_dependencies:
   flutter_test:
@@ -32,7 +33,7 @@ dev_dependencies:
 flutter_icons:
   android: true
   ios: true
-  image_path: "assets/images/app_image.jpg"
+  image_path: "assets/images/app_image.png"
 
 
   flutter_lints: ^5.0.0
@@ -52,6 +53,7 @@ flutter:
   assets:
     - assets/images/
     - assets/flags/
+    - assets/icons/
     - assets/translations/
     - assets/translations/uz-UZ.json
     - assets/translations/ru-RU.json

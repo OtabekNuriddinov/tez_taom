@@ -1,6 +1,8 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_carousel_widget/flutter_carousel_widget.dart';
+import 'package:provider/provider.dart';
+import '../providers/theme_provider.dart';
 import 'carousel_item.dart';
 
 class PromoCarousel extends StatelessWidget {
@@ -8,27 +10,28 @@ class PromoCarousel extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Watch for locale changes
     context.locale;
+    final themeProvider = Provider.of<ThemeProvider>(context);
+    final isDark = themeProvider.themeMode == ThemeMode.dark;
     
     final List<Map<String, dynamic>> _carouselItems = [
       {
-        'title': '${'new'.tr()} Gamburger',
+        'title': '${'new'.tr()} Hamburger',
         'description': 'special'.tr(),
         'imagePath': 'assets/images/hamburger_image.jpg',
-        'color': Colors.orange,
+        'color': isDark ? Colors.orange[300]! : Colors.orange[600]!,
       },
       {
         'title': 'Pizza Promo',
         'description': 'price1pizza2'.tr(),
         'imagePath': 'assets/images/pizza_image.jpg',
-        'color': Colors.red,
+        'color': isDark ? Colors.red[300]! : Colors.red[600]!,
       },
       {
         'title': 'newDrinks'.tr(),
         'description': 'newDrinks'.tr(),
         'imagePath': 'assets/images/drinks_image.jpg',
-        'color': Colors.blue,
+        'color': isDark ? Colors.blue[300]! : Colors.blue[600]!,
       },
     ];
 
@@ -42,13 +45,14 @@ class PromoCarousel extends StatelessWidget {
         );
       }).toList(),
       options: CarouselOptions(
-        height: 200.0,
+        height: 160.0,
         autoPlay: true,
-        autoPlayInterval: const Duration(seconds: 3),
-        autoPlayAnimationDuration: const Duration(milliseconds: 800),
-        autoPlayCurve: Curves.fastOutSlowIn,
+        autoPlayInterval: const Duration(seconds: 4),
+        autoPlayAnimationDuration: const Duration(milliseconds: 1000),
+        autoPlayCurve: Curves.easeInOutCubic,
         enlargeCenterPage: true,
-        viewportFraction: 0.8,
+        viewportFraction: 0.85,
+        // showIndicator: true, // If supported in your version
       ),
     );
   }
