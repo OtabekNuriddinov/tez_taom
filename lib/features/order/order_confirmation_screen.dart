@@ -240,7 +240,7 @@ ${cartProvider.cartItems.map((item) => '''
                         ),
                         const SizedBox(height: 18),
                         Padding(
-                          padding: EdgeInsets.only(left: 10, right: 10, bottom: 10),
+                          padding: EdgeInsets.only(left: 10, right: 10, bottom: 16),
                           child: AppButton(
                             text: 'confirmOrder'.tr(),
                             onPressed: _sendOrderToTelegram,

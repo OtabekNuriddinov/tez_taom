@@ -10,6 +10,7 @@ import 'dart:ui';
 import '../../components/app_background.dart';
 import '../../components/app_header.dart';
 import '../../components/app_card.dart';
+import 'privacy_policy_screen.dart';
 
 class SettingsScreen extends StatefulWidget {
   const SettingsScreen({super.key});
@@ -23,7 +24,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
 
   Future<void> _launchPhone(String phoneNumber) async {
     try {
-      final Uri uri = Uri(scheme: 'tel', path: phoneNumber);
+      final Uri uri = Uri.parse("tel:$phoneNumber");
       if (await canLaunchUrl(uri)) {
         await launchUrl(uri, mode: LaunchMode.externalApplication);
       } else {
@@ -64,9 +65,12 @@ class _SettingsScreenState extends State<SettingsScreen> {
   }
 
   void _shareApp() {
-    Share.share(
-      'Check out this amazing food delivery app: Tez Taom!',
-      subject: 'Tez Taom - Food Delivery App',
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text('shareAppNotAvailable'.tr()),
+        backgroundColor: const Color(0xFF43D049),
+        duration: const Duration(seconds: 2),
+      ),
     );
   }
 
@@ -93,61 +97,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   child: SingleChildScrollView(
                     child: Column(
                       children: [
-                        AppCard(
-                          child: Row(
-                            children: [
-                              Container(
-                                padding: const EdgeInsets.all(12),
-                                decoration: BoxDecoration(
-                                  color: Colors.green.withAlpha(50),
-                                  borderRadius: BorderRadius.circular(12),
-                                ),
-                                child: const Icon(
-                                  Icons.notifications,
-                                  color: Color(0xFF43D049),
-                                  size: 24,
-                                ),
-                              ),
-                              const SizedBox(width: 16),
-                              Expanded(
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      'notificationsOption'.tr(),
-                                      style: const TextStyle(
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.w600,
-                                        color: Color(0xFF43D049),
-                                      ),
-                                    ),
-                                    const SizedBox(height: 2),
-                                    Text(
-                                      'notificationsDescription'.tr(),
-                                      style: TextStyle(
-                                        fontSize: 12,
-                                        color: Colors.green.withAlpha(150),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                              Switch(
-                                value: _notificationsEnabled,
-                                onChanged: (value) {
-                                  setState(() {
-                                    _notificationsEnabled = value;
-                                  });
-                                },
-                                activeColor: const Color(0xFF43D049),
-                                activeTrackColor: Colors.green.withAlpha(80),
-                                inactiveThumbColor: Colors.green.withAlpha(120),
-                                inactiveTrackColor: Colors.green.withAlpha(30),
-                              ),
-                            ],
-                          ),
-                        ),
-                        const SizedBox(height: 16),
                         AppCard(
                           child: ListTile(
                             leading: Container(
@@ -194,7 +143,14 @@ class _SettingsScreenState extends State<SettingsScreen> {
                             title: Text('privacyPolicyOption'.tr(), style: const TextStyle(fontWeight: FontWeight.w600, color: Color(0xFF43D049))),
                             subtitle: Text('privacyPolicyDescription'.tr(), style: TextStyle(color: Colors.green.withAlpha(150))),
                             trailing: const Icon(Icons.arrow_forward_ios, color: Color(0xFF43D049), size: 20),
-                            onTap: () => _launchUrl('https://example.com/privacy'),
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => const PrivacyPolicyScreen(),
+                                ),
+                              );
+                            },
                           ),
                         ),
                         const SizedBox(height: 16),
@@ -211,7 +167,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                             title: Text('termsOfServiceOption'.tr(), style: const TextStyle(fontWeight: FontWeight.w600, color: Color(0xFF43D049))),
                             subtitle: Text('termsOfServiceDescription'.tr(), style: TextStyle(color: Colors.green.withAlpha(150))),
                             trailing: const Icon(Icons.arrow_forward_ios, color: Color(0xFF43D049), size: 20),
-                            onTap: () => _launchUrl('https://example.com/terms'),
+                            onTap: () => _showTermsOfServiceDialog(context),
                           ),
                         ),
                         const SizedBox(height: 16),
@@ -228,7 +184,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                             title: Text('rateAppOption'.tr(), style: const TextStyle(fontWeight: FontWeight.w600, color: Color(0xFF43D049))),
                             subtitle: Text('rateAppDescription'.tr(), style: TextStyle(color: Colors.green.withAlpha(150))),
                             trailing: const Icon(Icons.arrow_forward_ios, color: Color(0xFF43D049), size: 20),
-                            onTap: () => _launchUrl('https://play.google.com/store/apps/details?id=com.example.tez_taom'),
+                            onTap: () => _showRatingDialog(context),
                           ),
                         ),
                         const SizedBox(height: 16),
@@ -363,7 +319,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
             borderRadius: BorderRadius.circular(20),
           ),
           title: Text(
-            'aboutAppOption'.tr(),
+            'aboutAppTitle'.tr(),
             style: const TextStyle(
               fontWeight: FontWeight.bold,
               color: Color(0xFF43D049),
@@ -375,45 +331,255 @@ class _SettingsScreenState extends State<SettingsScreen> {
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Text(
+              Text(
                 'Tez Taom',
-                style: TextStyle(
+                style: const TextStyle(
                   fontSize: 18,
                   fontWeight: FontWeight.bold,
                   color: Color(0xFF43D049),
                 ),
               ),
               const SizedBox(height: 8),
-              const Text(
-                'Fast food delivery application with a wide selection of dishes. Order your favorite food quickly and easily!',
-                style: TextStyle(
+              Text(
+                'aboutAppContent'.tr(),
+                style: const TextStyle(
                   fontSize: 14,
                   color: Colors.black54,
                 ),
               ),
               const SizedBox(height: 16),
-              const Text(
-                'Features:',
-                style: TextStyle(
+              Text(
+                'aboutAppFeatures'.tr(),
+                style: const TextStyle(
                   fontSize: 16,
                   fontWeight: FontWeight.w600,
                   color: Color(0xFF43D049),
                 ),
               ),
               const SizedBox(height: 8),
-              _buildFeatureItem('• Fast delivery'),
-              _buildFeatureItem('• Wide selection of dishes'),
-              _buildFeatureItem('• Easy ordering process'),
-              _buildFeatureItem('• Multiple payment options'),
-              _buildFeatureItem('• Real-time order tracking'),
+              _buildFeatureItem('aboutAppFeature1'.tr()),
+              _buildFeatureItem('aboutAppFeature2'.tr()),
+              _buildFeatureItem('aboutAppFeature3'.tr()),
+              _buildFeatureItem('aboutAppFeature4'.tr()),
+              _buildFeatureItem('aboutAppFeature5'.tr()),
             ],
           ),
           actions: [
             TextButton(
               onPressed: () => Navigator.pop(context),
-              child: const Text(
-                'OK',
-                style: TextStyle(
+              child: Text(
+                'ok'.tr(),
+                style: const TextStyle(
+                  color: Color(0xFF43D049),
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  void _showTermsOfServiceDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          backgroundColor: Colors.white,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(20),
+          ),
+          title: Text(
+            'termsOfServiceTitle'.tr(),
+            style: const TextStyle(
+              fontWeight: FontWeight.bold,
+              color: Color(0xFF43D049),
+              fontSize: 20,
+            ),
+            textAlign: TextAlign.center,
+          ),
+          content: SingleChildScrollView(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                _buildSection(
+                  'termsOfServiceSection1Title'.tr(),
+                  'termsOfServiceSection1Content'.tr(),
+                ),
+                const SizedBox(height: 16),
+                _buildSection(
+                  'termsOfServiceSection2Title'.tr(),
+                  'termsOfServiceSection2Content'.tr(),
+                ),
+                const SizedBox(height: 16),
+                _buildSection(
+                  'termsOfServiceSection3Title'.tr(),
+                  'termsOfServiceSection3Content'.tr(),
+                ),
+                const SizedBox(height: 16),
+                _buildSection(
+                  'termsOfServiceSection4Title'.tr(),
+                  'termsOfServiceSection4Content'.tr(),
+                ),
+                const SizedBox(height: 16),
+                _buildSection(
+                  'termsOfServiceSection5Title'.tr(),
+                  'termsOfServiceSection5Content'.tr(),
+                ),
+                const SizedBox(height: 20),
+                Text(
+                  'termsOfServiceLastUpdated'.tr(),
+                  style: const TextStyle(
+                    fontSize: 12,
+                    color: Colors.grey,
+                    fontStyle: FontStyle.italic,
+                  ),
+                ),
+              ],
+            ),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: Text(
+                'ok'.tr(),
+                style: const TextStyle(
+                  color: Color(0xFF43D049),
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  void _showRatingDialog(BuildContext context) {
+    int selectedRating = 0;
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return StatefulBuilder(
+          builder: (context, setState) {
+            return AlertDialog(
+              backgroundColor: Colors.white,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(20),
+              ),
+              title: Text(
+                'rateAppTitle'.tr(),
+                style: const TextStyle(
+                  fontWeight: FontWeight.bold,
+                  color: Color(0xFF43D049),
+                  fontSize: 20,
+                ),
+                textAlign: TextAlign.center,
+              ),
+              content: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(
+                    'rateAppSubtitle'.tr(),
+                    style: const TextStyle(
+                      fontSize: 16,
+                      color: Colors.black54,
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
+                  const SizedBox(height: 20),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: List.generate(5, (index) {
+                      return GestureDetector(
+                        onTap: () {
+                          setState(() {
+                            selectedRating = index + 1;
+                          });
+                        },
+                        child: Icon(
+                          index < selectedRating ? Icons.star : Icons.star_border,
+                          color: const Color(0xFF43D049),
+                          size: 40,
+                        ),
+                      );
+                    }),
+                  ),
+                ],
+              ),
+              actions: [
+                TextButton(
+                  onPressed: () => Navigator.pop(context),
+                  child: Text(
+                    'ok'.tr(),
+                    style: const TextStyle(
+                      color: Color(0xFF43D049),
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                ),
+              ],
+            );
+          },
+        );
+      },
+    ).then((_) {
+      if (selectedRating > 0) {
+        _showThankYouDialog(context, selectedRating);
+      }
+    });
+  }
+
+  void _showThankYouDialog(BuildContext context, int rating) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          backgroundColor: Colors.white,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(20),
+          ),
+          title: Text(
+            'rateAppThankYou'.tr(),
+            style: const TextStyle(
+              fontWeight: FontWeight.bold,
+              color: Color(0xFF43D049),
+              fontSize: 20,
+            ),
+            textAlign: TextAlign.center,
+          ),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: List.generate(5, (index) {
+                  return Icon(
+                    index < rating ? Icons.star : Icons.star_border,
+                    color: const Color(0xFF43D049),
+                    size: 30,
+                  );
+                }),
+              ),
+              const SizedBox(height: 16),
+              Text(
+                'rateAppThankYouMessage'.tr(),
+                style: const TextStyle(
+                  fontSize: 16,
+                  color: Colors.black54,
+                ),
+                textAlign: TextAlign.center,
+              ),
+            ],
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: Text(
+                'ok'.tr(),
+                style: const TextStyle(
                   color: Color(0xFF43D049),
                   fontWeight: FontWeight.w600,
                 ),
@@ -435,6 +601,31 @@ class _SettingsScreenState extends State<SettingsScreen> {
           color: Colors.black54,
         ),
       ),
+    );
+  }
+
+  Widget _buildSection(String title, String content) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          title,
+          style: const TextStyle(
+            fontSize: 16,
+            fontWeight: FontWeight.w600,
+            color: Color(0xFF43D049),
+          ),
+        ),
+        const SizedBox(height: 8),
+        Text(
+          content,
+          style: const TextStyle(
+            fontSize: 14,
+            color: Colors.black87,
+            height: 1.5,
+          ),
+        ),
+      ],
     );
   }
 
